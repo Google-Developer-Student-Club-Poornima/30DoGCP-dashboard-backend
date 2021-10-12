@@ -1,31 +1,35 @@
 // Imports
 const express = require("express");
 const app = express();
-const fs = require("fs");
-const rl = require("readline");
-// Read CSV
-const reader = rl.createInterface({
-    input: fs.createReadStream("Poornima College of Engineering - Jaipur [09 Oct].csv")
-});
+const csv = require("csvtojson");
 
-// Convert CSV to Array
-const output = [];
-reader.on("line", (row) => {
-    output.push(row.split('"').join('').split(","));
-})
-reader.on("close", () => {
-    console.log("done");
-})
+// Path to CSV
+const filePath = "Poornima College of Engineering - Jaipur [10 Oct].csv";
+var responseObj = {
+    "gold": [],
+    "silver": [],
+    "bronze": [],
+    "unranked": []
+};
 
-// Use EJS
-app.set("view engine", "ejs");
-app.use(express.static("public"));
-
-// Express Routes
-app.get('/', function(req, res) {
-    res.render("index", { data: output });
-});
-
-// Listen to Server
+app.get('/', (req, res) => {
+        csv().fromFile(filePath).then((jsonObj) => {
+            jsonObj.forEach(obj => {
+                var numTrack1Badges = parseInt(obj['# of Skill Badges Completed in Track 1']);
+                var numTrack2Badges = parseInt(obj['# of Skill Badges Completed in Track 2']);
+                if (numTrack1Badges == 6 && numTrack2Badges == 6) {
+                    responseObj.gold.push(obj);
+                } else if ((numTrack1Badges == 6 && numTrack2Badges != 6) || (numTrack1Badges != 6 && numTrack2Badges == 6)) {
+                    responseObj.silver.push(obj);
+                } else if ((numTrack1Badges != 6 && numTrack1Badges != 0) && (numTrack2Badges != 6 && numTrack2Badges != 0)) {
+                    responseObj.bronze.push(obj);
+                } else {
+                    responseObj.unranked.push(obj)
+                }
+            })
+            res.send({ responseObj, goldLen: responseObj.gold.length, silverLen: responseObj.silver.length, bronzeLen: responseObj.bronze.length, unrankedLen: responseObj.unranked.length });
+        });
+    })
+    // Listen to Server
 const PORT = 4000;
 app.listen(PORT, () => console.log(`server on ${PORT}...`));

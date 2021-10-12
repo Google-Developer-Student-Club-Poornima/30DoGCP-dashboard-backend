@@ -10,6 +10,7 @@
     "author": "Yuvraj Dagur",
     "license": "ISC",
     "dependencies": {
+        "csvtojson": "^2.0.10",
         "ejs": "^3.1.6",
         "express": "^4.17.1"
     }
