@@ -4,30 +4,31 @@ const app = express();
 const csv = require("csvtojson");
 
 // Path to CSV
-const filePath = "Poornima College of Engineering - Jaipur [10 Oct].csv";
+const filePath = "data/data.csv";
 
 app.get('/', (req, res) => {
-        var responseObj = {
+        var ranks = {
             "gold": [],
             "silver": [],
             "bronze": [],
             "unranked": []
         };
         csv().fromFile(filePath).then((jsonObj) => {
-            jsonObj.forEach(obj => {
-                var numTrack1Badges = parseInt(obj['# of Skill Badges Completed in Track 1']);
-                var numTrack2Badges = parseInt(obj['# of Skill Badges Completed in Track 2']);
+            jsonObj.forEach(person => {
+                delete person['Student Email'];
+                var numTrack1Badges = parseInt(person['# of Skill Badges Completed in Track 1']);
+                var numTrack2Badges = parseInt(person['# of Skill Badges Completed in Track 2']);
                 if (numTrack1Badges == 6 && numTrack2Badges == 6) {
-                    responseObj.gold.push(obj);
+                    ranks.gold.push(person);
                 } else if ((numTrack1Badges == 6 && numTrack2Badges != 6) || (numTrack1Badges != 6 && numTrack2Badges == 6)) {
-                    responseObj.silver.push(obj);
+                    ranks.silver.push(person);
                 } else if ((numTrack1Badges != 6 && numTrack1Badges != 0) && (numTrack2Badges != 6 && numTrack2Badges != 0)) {
-                    responseObj.bronze.push(obj);
+                    ranks.bronze.push(person);
                 } else {
-                    responseObj.unranked.push(obj)
+                    ranks.unranked.push(person)
                 }
             })
-            res.send({ responseObj, goldLen: responseObj.gold.length, silverLen: responseObj.silver.length, bronzeLen: responseObj.bronze.length, unrankedLen: responseObj.unranked.length });
+            res.send({ ranks, goldLen: ranks.gold.length, silverLen: ranks.silver.length, bronzeLen: ranks.bronze.length, unrankedLen: ranks.unranked.length });
         });
     })
     // Listen to Server
