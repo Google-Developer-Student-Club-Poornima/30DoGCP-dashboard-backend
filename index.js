@@ -5,14 +5,14 @@ const csv = require("csvtojson");
 
 // Path to CSV
 const filePath = "Poornima College of Engineering - Jaipur [10 Oct].csv";
-var responseObj = {
-    "gold": [],
-    "silver": [],
-    "bronze": [],
-    "unranked": []
-};
 
 app.get('/', (req, res) => {
+        var responseObj = {
+            "gold": [],
+            "silver": [],
+            "bronze": [],
+            "unranked": []
+        };
         csv().fromFile(filePath).then((jsonObj) => {
             jsonObj.forEach(obj => {
                 var numTrack1Badges = parseInt(obj['# of Skill Badges Completed in Track 1']);
