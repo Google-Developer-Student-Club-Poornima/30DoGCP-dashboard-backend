@@ -1,5 +1,5 @@
 # 30 Days of Google Cloud API
-Create a Ranking Dashboard for **30 Days of Google Cloud** by taking data from Daily Progress Report received by Cloud Facilitators.
+Creates a Ranking Dashboard for **30 Days of Google Cloud** by taking data from Daily Progress Report received by Cloud Facilitators. It Ranks the participants into 4 Categories sorted on the basis of Number of Skill Badges Completed.
 
 ### API Usage
 Creates a Ranking Dashboard Data from Progress Report CSV which sorts the participants into 4 Categories:
