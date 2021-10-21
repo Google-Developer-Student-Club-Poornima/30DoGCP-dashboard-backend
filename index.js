@@ -2,10 +2,13 @@
 const express = require("express");
 const app = express();
 const csv = require("csvtojson");
-
+const cors = require("cors");
 // Path to CSV
 const filePath = "data/data.csv";
 
+app.use(cors({
+    origin: "*"
+}))
 app.get('/', (req, res) => {
         var ranks = {
             "gold": [],
@@ -22,7 +25,7 @@ app.get('/', (req, res) => {
                         ranks.gold.push(person);
                     } else if ((numTrack1Badges == 6 && numTrack2Badges != 6) || (numTrack1Badges != 6 && numTrack2Badges == 6)) {
                         ranks.silver.push(person);
-                    } else if ((numTrack1Badges != 6 && numTrack1Badges != 0) && (numTrack2Badges != 6 && numTrack2Badges != 0)) {
+                    } else if ((numTrack1Badges > 0 && numTrack1Badges < 6) && (numTrack2Badges < 6 && numTrack2Badges >= 0)) {
                         ranks.bronze.push(person);
                     } else {
                         ranks.unranked.push(person)
